@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.red {
+  border: 1px solid red;
+}
+
+.blue {
+  border: 1px solid blue;
+}
+
+.yellow {
+  border: 1px solid yellow;
+}
+
+.busToRight {
+  animation: busToRight 3.5s ease-in infinite;
+}
+.busToLeft {
+  animation: busToLeft 4.5s ease-in infinite;
+}
+
+@keyframes busToLeft {
+  0% {
+    opacity: 0;
+    transform: translate(0);
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-700px);
+  }
+}
+@keyframes busToRight {
+  0% {
+    opacity: 0;
+    transform: translate(0);
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(700px);
+  }
+}
+
+.customIconWeight {
+  stroke-width: 1;
+}
+
+select {
+  appearance: none; /* Standard way */
+  -webkit-appearance: none; /* Safari/Chrome */
+  -moz-appearance: none; /* Firefox */
+}
