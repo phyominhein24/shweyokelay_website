@@ -4,7 +4,7 @@ import { IoBagCheckOutline } from "react-icons/io5";
 
 const Tips = () => {
   return (
-    <div className="flex-col relative border border-black rounded-2xl p-5 md:p-10 mt-10 mb-10">
+    <div className="flex-col relative border border-black rounded-2xl p-5 md:p-10 mt-20 mb-10">
       <p className="bg-white md:px-6 pb-5 md:pb-0 relative md:absolute md:-top-5 md:-translate-x-1/2 md:left-1/2 text-xl md:text-2xl font-bold">
         ကားလက်မှတ်လေးတွေ ဘယ်လိုဝယ်ရမလဲ
       </p>

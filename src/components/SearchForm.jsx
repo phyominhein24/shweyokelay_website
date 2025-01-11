@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { BsArrowDownUp } from "react-icons/bs";
 import { CiCalendarDate } from "react-icons/ci";
 import DatePicker from "react-datepicker";
 import { GrMapLocation } from "react-icons/gr";
 import { IoLocationOutline } from "react-icons/io5";
 import PropTypes from "prop-types";
-import { getRequest } from "../helpers/api";
 import { endpoints } from "../constants/endpoints";
 import { format } from "date-fns";
-import { useDispatch, useSelector } from "react-redux";
+import { getRequest } from "../helpers/api";
 import { useNavigate } from "react-router-dom";
 
 const SearchForm = ({ onSearch, searchData = null }) => {
@@ -53,10 +54,10 @@ const SearchForm = ({ onSearch, searchData = null }) => {
   // Filter options dynamically
   useEffect(() => {
     setStartingPointOptions(
-      counter.filter((point) => point.name !== payload?.ending_point)
+      counter?.filter((point) => point.name !== payload?.ending_point)
     );
     setEndingPointOptions(
-      counter.filter((point) => point.name !== payload?.starting_point)
+      counter?.filter((point) => point.name !== payload?.starting_point)
     );
   }, [payload, counter]);
 

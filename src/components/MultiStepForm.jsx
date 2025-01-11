@@ -127,7 +127,7 @@ const MultiStepForm = () => {
             <Typography sx={{ mt: 2, mb: 1 }}>
               {getStepContent(activeStep)}
             </Typography>
-            <Box
+            {/* <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
@@ -151,7 +151,7 @@ const MultiStepForm = () => {
               <Button onClick={handleNext}>
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>
-            </Box>
+            </Box> */}
           </React.Fragment>
         )}
       </Box>

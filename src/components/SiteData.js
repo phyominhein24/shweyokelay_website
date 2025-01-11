@@ -8,7 +8,7 @@ export const SiteLanguages = [{ en: "English" }, { mm: "မြန်မာ" }];
 export const mainMenu = [
   { name: "Home", url: "/" },
   { name: "Contact", url: "/contact" },
-  { name: "FAQs", url: "/faq" },
+  // { name: "FAQs", url: "/faq" },
   { name: "About", url: "/about" },
   // testing purpose
   // { name: "Search", url: "/search" },

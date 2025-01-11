@@ -42,15 +42,34 @@ const Footer = () => {
         </div>
 
         {/* second col  */}
+        {/* second col  */}
         <div className="mb-5 md:mb-0">
-          <h3 className="text-md font-semibold pb-2">
-            Book Tickets faster. Download our mobile Apps
-          </h3>
-          <img
-            src="/src/assets/images/home/playstore.jpg"
-            alt="playstore"
-            className="w-[250px]"
-          />
+          <div className="mb-5">
+            <h3 className="text-md font-semibold pb-2">Legal</h3>
+            <div className="flex gap-3">
+              <Link
+                to="/privacy-policy"
+                className={`text-base transition-colors duration-400 text-stone-600 hover:text-primary-0 ${
+                  location.pathname === "/privacy-policy"
+                    ? "text-primary-0 "
+                    : ""
+                }`}
+              >
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-md font-semibold pb-2">
+              Book Tickets faster. Download our mobile Apps
+            </h3>
+            <img
+              src="/src/assets/images/home/playstore.jpg"
+              alt="playstore"
+              className="w-[250px]"
+            />
+          </div>
         </div>
 
         {/* third col */}

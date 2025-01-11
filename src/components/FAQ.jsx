@@ -18,11 +18,15 @@ const FAQ = () => {
             aria-controls="panel1-content"
             id="panel1-header"
           >
-            <Typography component="span">Accordion 1</Typography>
+            <Typography component="span">
+              How do I book a bus ticket?
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            To book a bus ticket, simply select your departure and destination
+            locations, choose your travel date, and browse through the available
+            buses. After selecting your preferred bus, enter your passenger
+            details, and proceed with payment to confirm your booking.
           </AccordionDetails>
         </Accordion>
         <Accordion>
@@ -31,11 +35,15 @@ const FAQ = () => {
             aria-controls="panel2-content"
             id="panel2-header"
           >
-            <Typography component="span">Accordion 2</Typography>
+            <Typography component="span">
+              Can I cancel or modify my booking?
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            Yes, you can cancel or modify your booking by logging into your
+            account and visiting the My Bookings section. Cancellation and
+            modification policies vary depending on the bus operator, so please
+            review the terms carefully before making any changes.
           </AccordionDetails>
         </Accordion>
         <Accordion defaultExpanded>
@@ -44,11 +52,15 @@ const FAQ = () => {
             aria-controls="panel3-content"
             id="panel3-header"
           >
-            <Typography component="span">Accordion 3</Typography>
+            <Typography component="span">
+              What payment methods do you accept?
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
+            We accept a variety of payment methods including credit cards, debit
+            cards, and online payment platforms such as PayPal. For specific
+            payment options, please check the payment section during the booking
+            process.
           </AccordionDetails>
         </Accordion>
       </div>

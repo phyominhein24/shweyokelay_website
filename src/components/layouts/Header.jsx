@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { removeNotification } from "../../redux/shareSlice";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImMenu3, ImMenu4 } from "react-icons/im";
-import Flag from "react-world-flags";
-import { useTranslation } from "react-i18next";
-import { mobileMenuToggle } from "../../redux/shareSlice";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { mainMenu, userMenu } from "../SiteData";
+import { useDispatch, useSelector } from "react-redux";
+
+import Flag from "react-world-flags";
+import { mobileMenuToggle } from "../../redux/shareSlice";
+import { removeNotification } from "../../redux/shareSlice";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const { t, i18n } = useTranslation();
@@ -68,6 +69,92 @@ const Header = () => {
           </div>
         ))}
       </div>
+
+      {mobileMenu && (
+        <div className="w-[85vw] h-96 fixed z-40 top-32 -translate-x-1/2 left-1/2 bg-stone-200 rounded-md overflow-y-scroll">
+          <div className="flex flex-col ">
+            {!userLogIn
+              ? mainMenu.map((linkObj, index) => {
+                  const { name, url } = linkObj;
+                  const isActive = location.pathname === url;
+
+                  return (
+                    <Link
+                      to={url}
+                      key={index}
+                      className={`p-5 text-center text-md font-semibold transition-colors duration-400 hover:text-primary-0 ${
+                        isActive ? "text-primary-0 bg-stone-300" : ""
+                      }`}
+                    >
+                      {t(name)}
+                    </Link>
+                  );
+                })
+              : userMenu.map((linkObj, index) => {
+                  const { name, url } = linkObj;
+                  const isActive = location.pathname === url;
+
+                  return (
+                    <Link
+                      to={url}
+                      key={index}
+                      className={`p-5 text-center text-md font-semibold transition-colors duration-400 hover:text-primary-0 ${
+                        isActive ? "text-primary-0 bg-stone-300" : ""
+                      }`}
+                    >
+                      {t(name)}
+                    </Link>
+                  );
+                })}
+
+            <button
+              onClick={() => logIn()}
+              className={`p-5 text-center text-md font-semibold transition-colors duration-400 hover:text-primary-0 hover:bg-stone-300 ${
+                myPath === "/login" ? "text-primary-0 bg-stone-300" : ""
+              }`}
+            >
+              <span className="text-md">
+                {userLogIn ? "Log Out" : "Log In/ Register"}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setTranslation(!translation)}
+              className="p-5 text-center text-md font-semibold transition-colors duration-400 hover:text-primary-0 hover:bg-stone-300"
+            >
+              {!translation ? (
+                <div>
+                  <Flag
+                    code="MM"
+                    style={{
+                      width: 40,
+                      height: 20,
+                      display: "inline-block",
+                      paddingRight: 10,
+                    }}
+                    alt="Myanmar Flag"
+                  />
+                  <span>မြန်မာဘာသာ</span>
+                </div>
+              ) : (
+                <div>
+                  <Flag
+                    code="GB"
+                    style={{
+                      width: 40,
+                      height: 20,
+                      display: "inline-block",
+                      paddingRight: 10,
+                    }}
+                    alt="English Flag"
+                  />
+                  <span>English</span>
+                </div>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <section className="bg-stone-200 shadow-md py-5 sticky top-0 z-50">

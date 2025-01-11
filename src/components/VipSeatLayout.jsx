@@ -2,7 +2,7 @@ import { FaTimes } from "react-icons/fa";
 import Steering from "../../src/assets/images/icons/steering.png";
 import { useState } from "react";
 
-const VipSeatLayout = ({value}) => {
+const VipSeatLayout = ({ value }) => {
   const rows = 10;
   const seatsPerRow = 3;
   const totalSeats = rows * seatsPerRow;
@@ -38,12 +38,12 @@ const VipSeatLayout = ({value}) => {
     Man: "bg-blue-500",
     Woman: "bg-pink-600",
     Monk: "bg-red-800",
-    Nun: "bg-pink-500",
+    Nun: "bg-pink-300",
   };
 
   return (
     <div className="flex flex-col items-center p-3">
-      <h2 className="text-lg md:text-xl font-semibold mb-4">
+      <h2 className="text-lg md:text-xl font-semibold mb-4 bg-pink">
         Shwe Yoke Lay VIP Bus
       </h2>
 

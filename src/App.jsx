@@ -18,10 +18,11 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/layouts/MainLayout";
 import MultiStepForm from "./components/MultiStepForm";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { Provider } from "react-redux";
+import RegisterPage from "./pages/RegisterPage";
 import SearchPage from "./pages/SearchPage";
 import { store } from "./redux/store";
-import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   const router = createBrowserRouter(
@@ -35,6 +36,7 @@ function App() {
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         {/* temp */}
         <Route path="/search" element={<SearchPage />} />
         <Route path="/step" element={<MultiStepForm />} />
