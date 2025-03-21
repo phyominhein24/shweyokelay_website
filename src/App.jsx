@@ -18,6 +18,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./components/layouts/MainLayout";
 import MultiStepForm from "./components/MultiStepForm";
+import PaymentPage from "./pages/Payment";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { Provider } from "react-redux";
 import RegisterPage from "./pages/RegisterPage";
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/payment" element={<PaymentPage />} />
         {/* temp */}
         <Route path="/search" element={<SearchPage />} />
         <Route path="/step" element={<MultiStepForm />} />
