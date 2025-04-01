@@ -22,6 +22,7 @@ export const endpoints = {
   profile: "profile",
   memberProfile: "memberProfile",
   contact: "contact",
+  cancleTicket: "cancleTicket",
   payment: "payments",
   image: `${imageURL}`,
 };

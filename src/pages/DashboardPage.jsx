@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getRequest } from "../helpers/api";
+import { getRequest, postRequest } from "../helpers/api";
 import { endpoints } from "../constants/endpoints";
 import { getData } from "../helpers/localstorage";
 import { keys } from "../constants/config";
@@ -44,6 +44,17 @@ const DashboardPage = () => {
     setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
+
+  const cancleTicket = async (e) => {
+    setLoading(true);
+    const result = await getRequest(`${endpoints.cancleTicket}/${e?.id}`);
+    if (result.status === 200) {
+      loadingData()
+    } else {
+      setError(true);
+    }
+    setLoading(false);
+  }
 
   const loadingData = useCallback(async () => {
     setLoading(true);
@@ -211,12 +222,24 @@ const DashboardPage = () => {
                   </span>
                 </td>
                 <td className="px-4 py-2 border-b text-sm">
-                  <button
-                    className="text-primary-0 hover:text-primary-1"
-                    onClick={() => handleTicketClick(ticket)}
-                  >
-                    View Details
-                  </button>
+                  <div className="flex gap-3">
+        
+                    <button
+                      className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:text-blue-800"
+                      onClick={() => handleTicketClick(ticket)}
+                    >
+                      View Details
+                    </button>
+
+                    {ticket?.status === "PENDING" && (
+                      <button
+                        className="flex items-center gap-2 px-3 py-1 text-red-600 hover:text-red-800"
+                        onClick={() => cancleTicket(ticket)}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

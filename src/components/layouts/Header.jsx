@@ -233,7 +233,7 @@ const Header = () => {
               <span>{userLogIn ? "Log Out" : "Log In/ Register"}</span>
             </button>
 
-            <button
+            {/* <button
               onClick={() => setTranslation(!translation)}
               className="text-md font-semibold transition-colors duration-400 hover:text-primary-0"
             >
@@ -266,7 +266,7 @@ const Header = () => {
                   <span>English</span>
                 </div>
               )}
-            </button>
+            </button> */}
           </div>
 
           {/* Hamburger */}
