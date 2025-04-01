@@ -7,8 +7,13 @@ const shareSlice = createSlice({
     errors: null,
     mobileMenu: false,
     user: {},
+    userLogIn: false
   },
   reducers: {
+    updateUserLogin: (state, action) => {
+      state.userLogIn = action.payload;
+      return state;
+    },
     updateNotification: (state, action) => {
       state.notification.push({
         id : Date.now(),
@@ -49,5 +54,5 @@ const shareSlice = createSlice({
   },
 });
 
-export const { updateNotification, removeNotification, updateError, sidebarToggle, updateUser, mobileMenuOpen, mobileMenuToggle } = shareSlice.actions;
+export const { updateUserLogin, updateNotification, removeNotification, updateError, sidebarToggle, updateUser, mobileMenuOpen, mobileMenuToggle } = shareSlice.actions;
 export default shareSlice.reducer;

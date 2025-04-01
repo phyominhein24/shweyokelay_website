@@ -19,6 +19,10 @@ export const mainMenu = [
 ];
 
 export const userMenu = [
+  { name: "Home", url: "/" },
+  { name: "Contact", url: "/contact" },
+  // { name: "FAQs", url: "/faq" },
+  { name: "About", url: "/about" },
   { name: "Dashboard", url: "/dashboard" },
   // { name: "Profile", url: "/profile" },
 ];

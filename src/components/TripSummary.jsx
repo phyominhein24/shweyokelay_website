@@ -7,43 +7,86 @@ import { GrLocation, GrMapLocation } from "react-icons/gr";
 import { BsTicket } from "react-icons/bs";
 import { CiClock2 } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
-import NrcForm from "./NrcForm";
 // import NRCForm from "react-mm-nrcform";
 import { PiSeatbelt } from "react-icons/pi";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { townshipData } from "./TownshipData";
 
-const TripSummary = ({ activeStep, handleNext, value }) => {
+const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSeats }) => {
   const [bookerName, setBookerName] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [specialRequest, setSpecialRequest] = useState("");
 
+  const [region, setRegion] = useState("");
+  const [townShip, setTownShip] = useState("")
+  const [townships, setTownships] = useState([]);
   const [nrcNumber, setNrcNumber] = useState("");
-  const [error, setError] = useState("");
+  const [nrcType, setNrcType] = useState("(နိုင်)");
+  const regions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-  const handleNrcChange = (e) => {
-    const value1 = e.target.value;
-    setNrcNumber(value1);
-
-    // Basic NRC format validation (customize based on specific rules)
-    const nrcRegex = /^[0-9]{1,2}\/[A-Za-z]{3,7}\(N\)[0-9]{6}$/;
-
-    if (!nrcRegex.test(value1) && value1 !== "") {
-      setError("Invalid NRC format. Example: 12/ThaGaKa(N)123456");
-    } else {
-      setError("");
-    }
+  const handleRegionChange = (e) => {
+    setRegion(e.target.value);
+    setTownships(townshipData[e.target.value] || []);
   };
+
+  const handleTownshipChange = (e) => {
+    setTownShip(e.target.value)
+  }
+
+  const [errors, setErrors] = useState({});
 
   const filterSubmitted = (e) => {
     e.preventDefault();
-    if (!error && nrcNumber) {
-      alert(`NRC Submitted: ${nrcNumber}`);
-    } else {
-      alert("Please enter a valid NRC number.");
+
+    let isValid = true;
+    const newErrors = {};
+
+    if (selectedSeats.length == 0) {
+      newErrors.selectedSeats = "Please select an seats.";
+      alert("Please select an seats.")
+      isValid = false;
     }
-    console.log("info form submitted");
+    if (!bookerName) {
+      newErrors.bookerName = "Please select an booker name.";
+      isValid = false;
+    }
+    if (!phone) {
+      newErrors.phone = "Please select an phone number.";
+      isValid = false;
+    }
+    if (!region) {
+      newErrors.region = "Please select an region.";
+      isValid = false;
+    }
+    if (!townShip) {
+      newErrors.townShip = "Please select an townships.";
+      isValid = false;
+    }
+    if (!nrcType) {
+      newErrors.nrcType = "Please select an nrc type.";
+      isValid = false;
+    }
+    if (!nrcNumber) {
+      newErrors.nrcNumber = "Please select an nrc number.";
+      isValid = false;
+    }
+   
+    setErrors(newErrors);
+    if (!isValid) {
+      return;
+    }
+
+    setBookerInfo({
+      name: bookerName,
+      phone: phone,
+      specialRequest: specialRequest,
+      region: region,
+      township: townShip,
+      nrcType: nrcType,
+      nrcNumber: nrcNumber
+    })
+    handleNext()
   };
 
   return (
@@ -64,7 +107,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                   size={30}
                   className="customIconWeight inline-block w-6 h-6 mr-3"
                 />
-                <span>{value?.starting_point}</span>
+                <span>{value?.starting_point2}</span>
               </div>
               <div className="border-l-2 border-black ml-3 h-6 mb-5 ">
                 <span className="pl-3 text-stone-500">to</span>
@@ -75,7 +118,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                   size={30}
                   className="customIconWeight inline-block w-6 h-6 mr-3"
                 />
-                <span>{value?.ending_point}</span>
+                <span>{value?.ending_point2}</span>
               </div>
             </div>
 
@@ -83,7 +126,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
             <div className="w-[40%] flex justify-center items-center">
               <div className="w-full text-center">
                 <span className="block text-gray-700 text-xl font-bold">
-                  {value?.departure}
+                 {value?.departure && `${((+value.departure.split(":")[0]) % 12 || 12)}:${value.departure.split(":")[1]} ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}
                 </span>
                 <span className="block text-2xl font-bold">{value?.vehicles_type?.name}</span>
               </div>
@@ -112,7 +155,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                 />
                 <span>Departure Date:</span>
               </div>
-              <p className="font-bold">{"12 Jan 2025"}</p>
+              <p className="font-bold">{value?.selected_date && new Date(value.selected_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
             </div>
             {/* Boarding Time */}
             <div className="pb-5 flex justify-between">
@@ -124,7 +167,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                 />
                 <span>Boarding Time:</span>
               </div>
-              <p className="font-bold">{value?.departure}</p>
+              <p className="font-bold">{value?.departure && `${((+value.departure.split(":")[0]) % 12 || 12)}:${value.departure.split(":")[1]} ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}</p>
             </div>
             {/* Number of seat */}
             <div className="pb-5 flex justify-between">
@@ -136,7 +179,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                 />
                 <span>Number of seat:</span>
               </div>
-              <p>2</p>
+              <p>{selectedSeats?.length}</p>
             </div>
             {/* Selected seats */}
             <div className="pb-5 flex justify-between">
@@ -149,12 +192,15 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                 <span>Selected seats:</span>
               </div>
               <div className="flex gap-3">
-                <p className="px-3 py-1 border border-gray-500 rounded-lg">
-                  21
+
+              {selectedSeats
+              ?.filter(value => !value.sold) // Exclude seats with sold: true
+              .map((value, index) => (
+                <p key={index} className="px-3 py-1 border border-gray-500 rounded-lg">
+                  {value?.number}
                 </p>
-                <p className="px-3 py-1 border border-gray-500 rounded-lg">
-                  22
-                </p>
+              ))}
+
               </div>
             </div>
             {/* Unit Ticket Price */}
@@ -167,7 +213,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                 />
                 <span>Unit Ticket Price:</span>
               </div>
-              <p>40,000 MMK</p>
+              <p>{value?.price.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MMK</p>
             </div>
           </div>
 
@@ -181,22 +227,24 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
               />
               <span>Total Ticket Price: </span>
             </div>
-            <div className="font-bold">80,000 MMK</div>
+            <div className="font-bold">{(selectedSeats?.length * Number(value?.price)).toLocaleString()} MMK</div>
           </div>
 
           {/* Facilities */}
           <div className="w-full pt-5 text-sm md:text-base border-t border-t-gray-400 border-dashed">
             <span className="pr-3">Including</span>
 
-            {JSON.parse(value?.vehicles_type?.facilities).map((v,index)=>{
-              return (
+            {value?.vehicles_type?.facilities ? (
+              JSON.parse(value.vehicles_type.facilities)?.map((v, index) => (
                 <p key={index} className="inline-block px-3 py-1 border border-gray-500 rounded-lg mr-3 mb-2">
-                {v}
-              </p>
-              )
-            })}
-
+                  {v}
+                </p>
+              ))
+            ) : (
+              <p className="text-gray-500">No facilities available</p> // Graceful fallback
+            )}
           </div>
+
         </div>
       </div>
 
@@ -224,6 +272,9 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                     onChange={(event) => setBookerName(event.target.value)}
                     className="w-full p-1 border border-stone-500"
                   />
+                  {errors.bookerName && (
+                    <p className="text-red-500 text-xs pl-2">{errors.bookerName}</p>
+                  )}
                 </div>
               </div>
 
@@ -242,6 +293,9 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                     onChange={(event) => setPhone(event.target.value)}
                     className="w-full p-1 border border-stone-500"
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs pl-2">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
@@ -253,25 +307,91 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
                   </label>
                 </div>
                 <div className="w-[70%]">
-                  <NrcForm />
+                  <div>
+                    <form className="flex gap-1">
+                      {/* region */}
+                      <div className="flex-none">
+                        <select
+                          id="region"
+                          value={region}
+                          onChange={handleRegionChange}
+                          className="p-1 border border-stone-500 bg-transparent"
+                        >
+                          <option value="" disabled>
+                            ရွေးပါ
+                          </option>
+
+                          {regions.map((r) => (
+                            <option key={r} value={r}>
+                              {r}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Township */}
+                      <div className="flex-none">
+                        <select
+                          id="code"
+                          value={townShip}
+                          onChange={handleTownshipChange}
+                          className="p-1 border border-stone-500 bg-transparent"
+                        >
+                          {townships.length > 0 ? (
+                            townships.map((township, index) => (
+                              <option key={index} value={township}>
+                                {township}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="">မရှိပါ</option>
+                          )}
+                        </select>
+                      </div>
+
+                      {/* type */}
+                      <div className="flex-none">
+                        <select
+                          id="number_type"
+                          value={nrcType}
+                          onChange={(e) => setNrcType(e.target.value)}
+                          className="p-1 border border-stone-500 bg-transparent"
+                        >
+                          <option value="(နိုင်)">နိုင်</option>
+                          <option value="(ဧည့်)">ဧည့်</option>
+                          <option value="(ပြု)">ပြု</option>
+                        </select>
+                      </div>
+
+                      {/* Card no. */}
+                      <div className="grow ">
+                        <input
+                          type="text"
+                          id="nrcNumber"
+                          minLength="6"
+                          maxLength="7"
+                          value={nrcNumber}
+                          onChange={(e) => setNrcNumber(e.target.value)}
+                          className="w-full p-1 border border-stone-500"
+                          placeholder="123456"
+                        />
+                      </div>
+                    </form>
+                    {errors.region && (
+                      <p className="text-red-500 text-xs pl-2">{errors.region}</p>
+                    )}
+                    {errors.townShip && (
+                      <p className="text-red-500 text-xs pl-2">{errors.townShip}</p>
+                    )}
+                    {errors.nrcType && (
+                      <p className="text-red-500 text-xs pl-2">{errors.nrcType}</p>
+                    )}
+                    {errors.nrcNumber && (
+                      <p className="text-red-500 text-xs pl-2">{errors.nrcNumber}</p>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              {/* Email */}
-              {/* <div className="flex items-center">
-              <div className="w-[30%]">
-                <label className="font-semibold">Email</label>
-              </div>
-              <div className="w-[70%]">
-                <input
-                  type="text"
-                  value={email}
-                  placeholder="This email will be used to send your ticket"
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="w-full p-1 border border-stone-500"
-                />
-              </div>
-            </div> */}
 
               {/* Special Request */}
               <div className="flex items-center">
@@ -300,7 +420,7 @@ const TripSummary = ({ activeStep, handleNext, value }) => {
 
               <div className="w-full flex justify-center text-xl py-5">
                 <button
-                  onClick={handleNext}
+                  onClick={filterSubmitted}
                   className={`w-1/2 bg-primary-0 hover:bg-secondary-0 px-5 py-[10px] border-none rounded-md text-[14px] font-semibold transition-colors duration-400`}
                 >
                   Continue to payment
@@ -319,5 +439,4 @@ export default TripSummary;
 TripSummary.propTypes = {
   activeStep: PropTypes.number.isRequired,
   handleNext: PropTypes.func.isRequired,
-  handleBack: PropTypes.func.isRequired,
 };

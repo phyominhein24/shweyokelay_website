@@ -2,8 +2,15 @@ import PropTypes from "prop-types";
 import StandardSeatLayout from "./StandardSeatLayout";
 import TripSummary from "./TripSummary";
 import VipSeatLayout from "./VipSeatLayout";
+import { useEffect, useState } from "react";
 
-const SeatSelectionStep = ({ handleNext, value }) => {
+const SeatSelectionStep = ({ activeStep, bookerInfo, selectedSeats, setSelectedSeats, setBookerInfo, handleNext, value, orders }) => {
+  
+  useEffect(()=>{
+    if(value == null){
+      navigate('/')
+    }
+  },[])
 
   return (
     <>
@@ -11,15 +18,15 @@ const SeatSelectionStep = ({ handleNext, value }) => {
         {/* sitting plan */}
         <div className="w-full md:w-[35%] ">
           {value?.vehicles_type?.seat_layout === "2:2" ? (
-            <StandardSeatLayout value={value}/>
+            <StandardSeatLayout value={value} selectedSeats={selectedSeats} setSelectedSeats={(e)=>setSelectedSeats(e)} orders={orders}/>
           ) : (
-            <VipSeatLayout value={value}/>
+            <VipSeatLayout value={value} selectedSeats={selectedSeats} setSelectedSeats={(e)=>setSelectedSeats(e)} orders={orders}/>
           )}
         </div>
 
         {/* trip Summary */}
         <div className="w-full md:w-[65%] md:px-16 ">
-          <TripSummary handleNext={handleNext} value={value}/>
+          <TripSummary activeStep={activeStep} setBookerInfo={(e)=>setBookerInfo(e)} handleNext={handleNext} selectedSeats={selectedSeats} value={value}/>
         </div>
       </div>
     </>
