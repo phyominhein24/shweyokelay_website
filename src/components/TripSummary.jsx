@@ -3,6 +3,7 @@ import {
   DepartureBoardSharp,
 } from "@mui/icons-material";
 import { GrLocation, GrMapLocation } from "react-icons/gr";
+import { useEffect, useState } from "react";
 
 import { BsTicket } from "react-icons/bs";
 import { CiClock2 } from "react-icons/ci";
@@ -10,16 +11,22 @@ import { FaMoneyBill } from "react-icons/fa";
 // import NRCForm from "react-mm-nrcform";
 import { PiSeatbelt } from "react-icons/pi";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { seatTypeColors } from "../helpers/utilities";
 import { townshipData } from "./TownshipData";
 
-const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSeats }) => {
+const TripSummary = ({
+  setBookerInfo,
+  activeStep,
+  handleNext,
+  value,
+  selectedSeats,
+}) => {
   const [bookerName, setBookerName] = useState("");
   const [phone, setPhone] = useState("");
   const [specialRequest, setSpecialRequest] = useState("");
 
   const [region, setRegion] = useState("");
-  const [townShip, setTownShip] = useState("")
+  const [townShip, setTownShip] = useState("");
   const [townships, setTownships] = useState([]);
   const [nrcNumber, setNrcNumber] = useState("");
   const [nrcType, setNrcType] = useState("(နိုင်)");
@@ -31,8 +38,8 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
   };
 
   const handleTownshipChange = (e) => {
-    setTownShip(e.target.value)
-  }
+    setTownShip(e.target.value);
+  };
 
   const [errors, setErrors] = useState({});
 
@@ -44,7 +51,7 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
 
     if (selectedSeats.length == 0) {
       newErrors.selectedSeats = "Please select an seats.";
-      alert("Please select an seats.")
+      alert("Please select an seats.");
       isValid = false;
     }
     if (!bookerName) {
@@ -71,7 +78,7 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
       newErrors.nrcNumber = "Please select an nrc number.";
       isValid = false;
     }
-   
+
     setErrors(newErrors);
     if (!isValid) {
       return;
@@ -84,10 +91,12 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
       region: region,
       township: townShip,
       nrcType: nrcType,
-      nrcNumber: nrcNumber
-    })
-    handleNext()
+      nrcNumber: nrcNumber,
+    });
+    handleNext();
   };
+
+  console.log("selectedSeats", selectedSeats);
 
   return (
     <div className="w-full ">
@@ -126,9 +135,14 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
             <div className="w-[40%] flex justify-center items-center">
               <div className="w-full text-center">
                 <span className="block text-gray-700 text-xl font-bold">
-                 {value?.departure && `${((+value.departure.split(":")[0]) % 12 || 12)}:${value.departure.split(":")[1]} ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}
+                  {value?.departure &&
+                    `${+value.departure.split(":")[0] % 12 || 12}:${
+                      value.departure.split(":")[1]
+                    } ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}
                 </span>
-                <span className="block text-2xl font-bold">{value?.vehicles_type?.name}</span>
+                <span className="block text-2xl font-bold">
+                  {value?.vehicles_type?.name}
+                </span>
               </div>
             </div>
           </div>
@@ -155,7 +169,14 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
                 />
                 <span>Departure Date:</span>
               </div>
-              <p className="font-bold">{value?.selected_date && new Date(value.selected_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</p>
+              <p className="font-bold">
+                {value?.selected_date &&
+                  new Date(value.selected_date).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+              </p>
             </div>
             {/* Boarding Time */}
             <div className="pb-5 flex justify-between">
@@ -167,7 +188,12 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
                 />
                 <span>Boarding Time:</span>
               </div>
-              <p className="font-bold">{value?.departure && `${((+value.departure.split(":")[0]) % 12 || 12)}:${value.departure.split(":")[1]} ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}</p>
+              <p className="font-bold">
+                {value?.departure &&
+                  `${+value.departure.split(":")[0] % 12 || 12}:${
+                    value.departure.split(":")[1]
+                  } ${+value.departure.split(":")[0] >= 12 ? "PM" : "AM"}`}
+              </p>
             </div>
             {/* Number of seat */}
             <div className="pb-5 flex justify-between">
@@ -192,15 +218,18 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
                 <span>Selected seats:</span>
               </div>
               <div className="flex gap-3">
-
-              {selectedSeats
-              ?.filter(value => !value.sold) // Exclude seats with sold: true
-              .map((value, index) => (
-                <p key={index} className="px-3 py-1 border border-gray-500 rounded-lg">
-                  {value?.number}
-                </p>
-              ))}
-
+                {selectedSeats
+                  ?.filter((value) => !value.sold) // Exclude seats with sold: true
+                  .map((value, index) => (
+                    <p
+                      key={index}
+                      className={`px-3 py-1 border border-gray-500 rounded-lg ${
+                        seatTypeColors[value.type]
+                      }`}
+                    >
+                      {value?.number}
+                    </p>
+                  ))}
               </div>
             </div>
             {/* Unit Ticket Price */}
@@ -227,7 +256,10 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
               />
               <span>Total Ticket Price: </span>
             </div>
-            <div className="font-bold">{(selectedSeats?.length * Number(value?.price)).toLocaleString()} MMK</div>
+            <div className="font-bold">
+              {(selectedSeats?.length * Number(value?.price)).toLocaleString()}{" "}
+              MMK
+            </div>
           </div>
 
           {/* Facilities */}
@@ -236,7 +268,10 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
 
             {value?.vehicles_type?.facilities ? (
               JSON.parse(value.vehicles_type.facilities)?.map((v, index) => (
-                <p key={index} className="inline-block px-3 py-1 border border-gray-500 rounded-lg mr-3 mb-2">
+                <p
+                  key={index}
+                  className="inline-block px-3 py-1 border border-gray-500 rounded-lg mr-3 mb-2"
+                >
                   {v}
                 </p>
               ))
@@ -244,7 +279,6 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
               <p className="text-gray-500">No facilities available</p> // Graceful fallback
             )}
           </div>
-
         </div>
       </div>
 
@@ -273,7 +307,9 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
                     className="w-full p-1 border border-stone-500"
                   />
                   {errors.bookerName && (
-                    <p className="text-red-500 text-xs pl-2">{errors.bookerName}</p>
+                    <p className="text-red-500 text-xs pl-2">
+                      {errors.bookerName}
+                    </p>
                   )}
                 </div>
               </div>
@@ -378,16 +414,24 @@ const TripSummary = ({ setBookerInfo, activeStep, handleNext, value, selectedSea
                       </div>
                     </form>
                     {errors.region && (
-                      <p className="text-red-500 text-xs pl-2">{errors.region}</p>
+                      <p className="text-red-500 text-xs pl-2">
+                        {errors.region}
+                      </p>
                     )}
                     {errors.townShip && (
-                      <p className="text-red-500 text-xs pl-2">{errors.townShip}</p>
+                      <p className="text-red-500 text-xs pl-2">
+                        {errors.townShip}
+                      </p>
                     )}
                     {errors.nrcType && (
-                      <p className="text-red-500 text-xs pl-2">{errors.nrcType}</p>
+                      <p className="text-red-500 text-xs pl-2">
+                        {errors.nrcType}
+                      </p>
                     )}
                     {errors.nrcNumber && (
-                      <p className="text-red-500 text-xs pl-2">{errors.nrcNumber}</p>
+                      <p className="text-red-500 text-xs pl-2">
+                        {errors.nrcNumber}
+                      </p>
                     )}
                   </div>
                 </div>

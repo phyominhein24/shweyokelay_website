@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+
 import { endpoints } from "../constants/endpoints";
 import { postRequest } from "../helpers/api";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ContactPage = () => {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -47,7 +48,7 @@ const ContactPage = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    
+
     try {
       const response = await postRequest(endpoints.contact, formData, {
         headers: { "Content-Type": "application/json" },
@@ -76,19 +77,22 @@ const ContactPage = () => {
         <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
           <FaMapMarkerAlt className="text-4xl text-primary-0 mb-4" />
           <h3 className="text-lg font-semibold mb-2">Our Location</h3>
-          <p className="text-sm text-center">123 Main Street, Yangon, Myanmar</p>
+          <p className="text-sm text-center">
+            Nagyi-D5,MyingyanStreet Bus Terminal, Aung Mingalar Street, Yangon,
+            Myanmar.
+          </p>
         </div>
 
         <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
           <FaPhoneAlt className="text-4xl text-primary-0 mb-4" />
           <h3 className="text-lg font-semibold mb-2">Call Us</h3>
-          <p className="text-sm">(+95) 123-456-789</p>
+          <p className="text-sm">09 408800095,09 4088000098</p>
         </div>
 
         <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
           <FaEnvelope className="text-4xl text-primary-0 mb-4" />
           <h3 className="text-lg font-semibold mb-2">Email Us</h3>
-          <p className="text-sm">info@companyname.com</p>
+          <p className="text-sm">sylexpress.complaint@gmail.com</p>
         </div>
       </div>
 
@@ -101,7 +105,9 @@ const ContactPage = () => {
               <h2 className="text-xl font-semibold text-primary-0 mb-4">
                 Thank You!
               </h2>
-              <p>Your message has been received. We&apos;ll get back to you soon.</p>
+              <p>
+                Your message has been received. We&apos;ll get back to you soon.
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -117,7 +123,9 @@ const ContactPage = () => {
                   onChange={handleChange}
                   className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
                 />
-                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name}</p>
+                )}
               </div>
 
               <div>
@@ -132,7 +140,9 @@ const ContactPage = () => {
                   onChange={handleChange}
                   className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
                 />
-                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                {errors.phone && (
+                  <p className="text-red-500 text-sm">{errors.phone}</p>
+                )}
               </div>
 
               <div>
@@ -147,7 +157,9 @@ const ContactPage = () => {
                   onChange={handleChange}
                   className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
                 />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
               </div>
 
               <div>
@@ -162,7 +174,9 @@ const ContactPage = () => {
                   onChange={handleChange}
                   className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
                 ></textarea>
-                {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}
+                {errors.message && (
+                  <p className="text-red-500 text-sm">{errors.message}</p>
+                )}
               </div>
 
               <button
@@ -179,10 +193,13 @@ const ContactPage = () => {
         {/* Embedded Map */}
         <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden">
           <iframe
-            title="Company Location"
-            src="https://www.google.com/maps/embed?..."
-            className="w-full h-full border-0"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d238.5540104546615!2d96.15971888651247!3d16.931991239866544!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c191774384f175%3A0xe32220f5f6845b68!2sShwe%20Yoke%20Lay%20Highway%20Express!5e0!3m2!1sen!2sus!4v1744080230455!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
             allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
       </div>

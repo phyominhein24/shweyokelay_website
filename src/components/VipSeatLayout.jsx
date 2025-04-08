@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
+
 import { FaTimes } from "react-icons/fa";
 import Steering from "../../src/assets/images/icons/steering.png";
-import { useEffect, useState } from "react";
+import { seatTypeColors } from "../helpers/utilities";
 
 const VipSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
   const rows = 10;
@@ -29,22 +31,16 @@ const VipSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
     //     seat.number === modal.seatNumber ? { ...seat, type } : seat
     //   )
     // );
-    setSelectedSeats((prev) => { return [...prev, { number: modal.seatNumber, type: type }]})
+    setSelectedSeats((prev) => {
+      return [...prev, { number: modal.seatNumber, type: type }];
+    });
     setModal({ visible: false, seatNumber: null });
-  };
-
-  // Mapping seat types to background colors
-  const seatTypeColors = {
-    Man: "bg-blue-500",
-    Woman: "bg-pink-600",
-    Monk: "bg-red-800",
-    Nun: "bg-pink-300",
   };
 
   return (
     <div className="flex flex-col items-center p-3">
       <h2 className="text-lg md:text-xl font-semibold mb-4 bg-pink">
-        Shwe Yoke Lay VIP Bus
+        Shwe Yote Lay VIP Bus
       </h2>
 
       <div className="bg-gray-100 border border-black p-1 md:p-4 rounded-t-[3rem] rounded-b-3xl shadow-xl grid grid-cols-4 gap-4 pt-10 pb-8 relative">
@@ -65,48 +61,57 @@ const VipSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
         </div>
 
         {/* Passenger seats layout */}
-        {Array.from({ length: value?.vehicles_type?.total_seat }, (_, index) => {
-          const seatNumber = index + 1;
-          const seat = selectedSeats.find((seat) => seat.number === seatNumber);
-          const backgroundColor = seat
-            ? seatTypeColors[seat.type] || "bg-green-400"
-            : "bg-green-400";
+        {Array.from(
+          { length: value?.vehicles_type?.total_seat },
+          (_, index) => {
+            const seatNumber = index + 1;
+            const seat = selectedSeats.find(
+              (seat) => seat.number === seatNumber
+            );
+            const backgroundColor = seat
+              ? seatTypeColors[seat.type] || "bg-green-400"
+              : "bg-green-400";
 
-          // Calculate seat position
-          const seatPosition = index % 3;
-          const seatRow = Math.floor(index / 3);
-          const gridColumn = [1, 2, 4, 1][seatPosition];
-          const isSold = seat ? seat.sold : false;
+            // Calculate seat position
+            const seatPosition = index % 3;
+            const seatRow = Math.floor(index / 3);
+            const gridColumn = [1, 2, 4, 1][seatPosition];
+            const isSold = seat ? seat.sold : false;
 
-          return (
-            <div
-              key={seatNumber}
-              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              style={{
-                gridColumn,
-                gridRow: seatRow + 2, // Seats start below driver and door
-              }}
-              onClick={() => !isSold && toggleSeat(seatNumber)}
-            >
-              {seatNumber}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={seatNumber}
+                className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${
+                  isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
+                style={{
+                  gridColumn,
+                  gridRow: seatRow + 2, // Seats start below driver and door
+                }}
+                onClick={() => !isSold && toggleSeat(seatNumber)}
+              >
+                {seatNumber}
+              </div>
+            );
+          }
+        )}
       </div>
 
       <div className="w-full mt-5">
         <h3 className="text-lg text-center font-semibold mb-2">
           Color definitions
         </h3>
-        <div className="flex gap-2 justify-center">
-          {["Man", "Woman", "Monk", "Nun"].map((type) => (
-            <div
-              key={type}
-              className={`px-3 py-2 ${seatTypeColors[type]} text-white rounded-lg`}
-            >
-              {type}
-            </div>
-          ))}
+        <div className="flex flex-wrap gap-2 justify-center">
+          {["Available", "Man", "Woman", "Monk", "Nun", "On Hold"].map(
+            (type) => (
+              <div
+                key={type}
+                className={`px-3 py-2 ${seatTypeColors[type]} text-white rounded-lg`}
+              >
+                {type}
+              </div>
+            )
+          )}
         </div>
       </div>
 

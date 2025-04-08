@@ -1,8 +1,14 @@
 import { FaTimes } from "react-icons/fa";
 import Steering from "../../src/assets/images/icons/steering.png";
+import { seatTypeColors } from "../helpers/utilities";
 import { useState } from "react";
 
-const StandardSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
+const StandardSeatLayout = ({
+  value,
+  selectedSeats,
+  setSelectedSeats,
+  orders,
+}) => {
   const rows = 11;
   const seatsPerRow = 4;
   const totalSeats = rows * seatsPerRow;
@@ -16,7 +22,7 @@ const StandardSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) 
         return prev.filter((seat) => seat.number !== seatNumber);
       } else {
         setModal({ visible: true, seatNumber });
-        return prev
+        return prev;
       }
     });
   };
@@ -27,22 +33,16 @@ const StandardSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) 
     //     seat.number === modal.seatNumber ? { ...seat, type } : seat
     //   )
     // );
-    setSelectedSeats((prev) => { return [...prev, { number: modal.seatNumber, type: type }]})
+    setSelectedSeats((prev) => {
+      return [...prev, { number: modal.seatNumber, type: type }];
+    });
     setModal({ visible: false, seatNumber: null });
   };
-
-  const seatTypeColors = {
-    Man: "bg-blue-500",
-    Woman: "bg-pink-600",
-    Monk: "bg-red-800",
-    Nun: "bg-pink-500",
-  };
-
 
   return (
     <div className="flex flex-col items-center p-3">
       <h2 className="text-lg md:text-xl font-semibold mb-4">
-        Shwe Yoke Lay Standard Bus
+        Shwe Yote Lay Standard Bus
       </h2>
 
       <div className="bg-gray-100 border border-black p-1 md:p-4 rounded-t-[3rem] rounded-b-3xl shadow-xl grid grid-cols-5 gap-4 pt-10 pb-8 relative">
@@ -60,34 +60,41 @@ const StandardSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) 
         </div>
 
         {/* Passenger seats layout */}
-        {Array.from({ length: value?.vehicles_type?.total_seat }, (_, index) => {
-          const seatNumber = index + 1;
-          console.log(selectedSeats)
-          const seat = selectedSeats.find((seat) => seat?.number === seatNumber);
-          const backgroundColor = seat
-            ? seatTypeColors[seat.type] || "bg-green-400"
-            : "bg-green-400";
+        {Array.from(
+          { length: value?.vehicles_type?.total_seat },
+          (_, index) => {
+            const seatNumber = index + 1;
+            console.log(selectedSeats);
+            const seat = selectedSeats.find(
+              (seat) => seat?.number === seatNumber
+            );
+            const backgroundColor = seat
+              ? seatTypeColors[seat.type] || "bg-green-400"
+              : "bg-green-400";
 
-          // Calculate seat position
-          const seatPosition = index % 4;
-          const seatRow = Math.floor(index / 4);
-          const gridColumn = [1, 2, 4, 5][seatPosition];
-          const isSold = seat ? seat.sold : false;
+            // Calculate seat position
+            const seatPosition = index % 4;
+            const seatRow = Math.floor(index / 4);
+            const gridColumn = [1, 2, 4, 5][seatPosition];
+            const isSold = seat ? seat.sold : false;
 
-          return (
-            <div
-              key={seatNumber}
-              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              style={{
-                gridColumn,
-                gridRow: seatRow + 2, // Seats start below driver and door
-              }}
-              onClick={() => !isSold && toggleSeat(seatNumber)}
-            >
-              {seatNumber}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={seatNumber}
+                className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${
+                  isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
+                style={{
+                  gridColumn,
+                  gridRow: seatRow + 2, // Seats start below driver and door
+                }}
+                onClick={() => !isSold && toggleSeat(seatNumber)}
+              >
+                {seatNumber}
+              </div>
+            );
+          }
+        )}
       </div>
 
       <div className="w-full mt-5">

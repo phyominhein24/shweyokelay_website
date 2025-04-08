@@ -1,16 +1,16 @@
 import { ImMenu3, ImMenu4 } from "react-icons/im";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { getData, removeData } from "../../helpers/localstorage";
 import { mainMenu, userMenu } from "../SiteData";
 import { useDispatch, useSelector } from "react-redux";
 
 import Flag from "react-world-flags";
+import { keys } from "../../constants/config";
 import { mobileMenuToggle } from "../../redux/shareSlice";
 import { removeNotification } from "../../redux/shareSlice";
-import { useTranslation } from "react-i18next";
-import { getData, removeData } from "../../helpers/localstorage";
-import { keys } from "../../constants/config";
 import { updateUserLogin } from "../../shares/shareSlice";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const { t, i18n } = useTranslation();
@@ -19,7 +19,9 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { mobileMenu, notification, userLogIn } = useSelector((state) => state.share);
+  const { mobileMenu, notification, userLogIn } = useSelector(
+    (state) => state.share
+  );
 
   const myPath = location.pathname;
 
@@ -32,12 +34,12 @@ const Header = () => {
   }, [i18n, translation]);
 
   const logIn = () => {
-    if(userLogIn){
+    if (userLogIn) {
       dispatch(updateUserLogin(false));
       removeData(keys.API_TOKEN);
       removeData(keys.USER);
       navigate("/");
-    }else{
+    } else {
       navigate("/login");
     }
   };
@@ -52,17 +54,17 @@ const Header = () => {
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, [notification, dispatch]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const apiToken = getData(keys.API_TOKEN);
     const user = getData(keys.USER);
     if (apiToken && user) {
-      dispatch(updateUserLogin(true))
+      dispatch(updateUserLogin(true));
     }
-  },[])
+  }, []);
 
-  useEffect(()=>{
-    console.log(userLogIn)
-  },[userLogIn])
+  // useEffect(()=>{
+  //   console.log(userLogIn)
+  // },[userLogIn])
 
   return (
     <>

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
 import { getRequest, postRequest } from "../helpers/api";
+import { useCallback, useEffect, useState } from "react";
+
 import { endpoints } from "../constants/endpoints";
 import { getData } from "../helpers/localstorage";
 import { keys } from "../constants/config";
@@ -49,12 +50,12 @@ const DashboardPage = () => {
     setLoading(true);
     const result = await getRequest(`${endpoints.cancleTicket}/${e?.id}`);
     if (result.status === 200) {
-      loadingData()
+      loadingData();
     } else {
       setError(true);
     }
     setLoading(false);
-  }
+  };
 
   const loadingData = useCallback(async () => {
     setLoading(true);
@@ -105,12 +106,15 @@ const DashboardPage = () => {
   // Paginate the paymentHistory data
   const indexOfLastTicket = currentPage * itemsPerPage;
   const indexOfFirstTicket = indexOfLastTicket - itemsPerPage;
-  const currentTickets = paymentHistory.slice(indexOfFirstTicket, indexOfLastTicket);
+  const currentTickets = paymentHistory.slice(
+    indexOfFirstTicket,
+    indexOfLastTicket
+  );
 
   return (
     <div className="mx-auto max-w-[1280px] px-3 md:px-5 flex flex-col py-10">
       <h1 className="text-2xl md:text-3xl font-extrabold text-primary-0 mb-10">
-        {isAgent ? 'Agent' : 'User'} Dashboard
+        {isAgent ? "Agent" : "User"} Dashboard
       </h1>
 
       {/* User Profile Section with Ticket Counts */}
@@ -169,9 +173,15 @@ const DashboardPage = () => {
               onChange={handleItemsPerPageChange}
               className="border px-2 py-1 rounded-md text-center"
             >
-              <option className="text-center" value={2}>2</option>
-              <option className="text-center" value={5}>5</option>
-              <option className="text-center" value={10}>10</option>
+              <option className="text-center" value={2}>
+                2
+              </option>
+              <option className="text-center" value={5}>
+                5
+              </option>
+              <option className="text-center" value={10}>
+                10
+              </option>
             </select>
           </div>
         </div>
@@ -179,42 +189,84 @@ const DashboardPage = () => {
         <table className="mt-2 min-w-full table-auto">
           <thead>
             <tr>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">Bus Number</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">Seat Number</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">Date</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">From</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">To</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">Status</th>
-              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">Actions</th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                Bus Number
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                Seat Number
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                Date
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                From
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                To
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                Status
+              </th>
+              <th className="px-4 py-2 border-b text-sm font-semibold text-primary-0 text-start">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentTickets.map((ticket) => (
               <tr key={ticket.id}>
-                <td className="px-4 py-2 border-b text-sm">{ticket.busNumber}</td>
                 <td className="px-4 py-2 border-b text-sm">
-                  {Array.isArray(ticket?.seat) 
-                        ? ticket.seat.map(seat => `${seat.number}(${seat.type})`).join(", ") 
-                        : Array.isArray(JSON.parse(ticket?.seat)) 
-                          ? JSON.parse(ticket.seat).map(seat => `${seat.number}(${seat.type})`).join(", ") 
-                          : "No data"}
+                  {ticket.busNumber}
                 </td>
                 <td className="px-4 py-2 border-b text-sm">
-                  {ticket?.start_time ? ticket.start_time.split("T")[0] : "No date available"}
-                      ({ticket?.route?.departure 
-                      ? ((h, m) => `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`)
-                        (...ticket.route.departure.split(":").map(Number)) 
-                      : "No time available"})
+                  {Array.isArray(ticket?.seat)
+                    ? ticket.seat
+                        .map((seat) => `${seat.number}(${seat.type})`)
+                        .join(", ")
+                    : Array.isArray(JSON.parse(ticket?.seat))
+                    ? JSON.parse(ticket.seat)
+                        .map((seat) => `${seat.number}(${seat.type})`)
+                        .join(", ")
+                    : "No data"}
                 </td>
-                <td className="px-4 py-2 border-b text-sm">{ticket.route?.starting_point2}</td>
-                <td className="px-4 py-2 border-b text-sm">{ticket.route?.ending_point2}</td>
+                <td className="px-4 py-2 border-b text-sm">
+                  {ticket?.start_time
+                    ? ticket.start_time.split("T")[0]
+                    : "No date available"}
+                  (
+                  {ticket?.route?.departure
+                    ? ((h, m) =>
+                        `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${
+                          h >= 12 ? "PM" : "AM"
+                        }`)(...ticket.route.departure.split(":").map(Number))
+                    : "No time available"}
+                  )
+                </td>
+                <td className="px-4 py-2 border-b text-sm">
+                  {ticket.route?.starting_point2}
+                </td>
+                <td className="px-4 py-2 border-b text-sm">
+                  {ticket.route?.ending_point2}
+                </td>
                 <td className="px-4 py-2 border-b text-sm">
                   <span
                     className={`
                       px-2 py-1 rounded-md
-                      ${ticket.status === "PENDING" ? "text-yellow-500 border-yellow-500" : ""}
-                      ${ticket.status === "SUCCESS" ? "text-green-500 border-green-500" : ""}
-                      ${ticket.status === "REJECT" ? "text-red-500 border-red-500" : ""}
+                      ${
+                        ticket.status === "PENDING"
+                          ? "text-yellow-500 border-yellow-500"
+                          : ""
+                      }
+                      ${
+                        ticket.status === "SUCCESS"
+                          ? "text-green-500 border-green-500"
+                          : ""
+                      }
+                      ${
+                        ticket.status === "REJECT"
+                          ? "text-red-500 border-red-500"
+                          : ""
+                      }
                       border-2
                     `}
                   >
@@ -223,7 +275,6 @@ const DashboardPage = () => {
                 </td>
                 <td className="px-4 py-2 border-b text-sm">
                   <div className="flex gap-3">
-        
                     <button
                       className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:text-blue-800"
                       onClick={() => handleTicketClick(ticket)}
@@ -248,7 +299,9 @@ const DashboardPage = () => {
 
         {/* Pagination Controls */}
         <div className="flex justify-center gap-3 mt-4">
-          {Array.from({ length: Math.ceil(paymentHistory.length / itemsPerPage) }).map((_, index) => (
+          {Array.from({
+            length: Math.ceil(paymentHistory.length / itemsPerPage),
+          }).map((_, index) => (
             <button
               key={index}
               onClick={() => paginate(index + 1)}
@@ -270,34 +323,66 @@ const DashboardPage = () => {
             <h2 className="text-xl font-semibold text-primary-0 mb-4">
               Ticket Details
             </h2>
-            <p><strong>Bus Number:</strong> {ticketDetails.busNumber}</p>
-            <p><strong>Seat Number:</strong> {Array.isArray(ticketDetails?.seat) 
-                        ? ticketDetails.seat.map(seat => `${seat.number}(${seat.type})`).join(", ") 
-                        : Array.isArray(JSON.parse(ticketDetails?.seat)) 
-                          ? JSON.parse(ticketDetails.seat).map(seat => `${seat.number}(${seat.type})`).join(", ") 
-                          : "No data"}
+            <p>
+              <strong>Bus Number:</strong> {ticketDetails.busNumber}
             </p>
-            <p><strong>Date:</strong>
-              {ticketDetails?.start_time ? ticketDetails.start_time.split("T")[0] : "No date available"}
-              ({ticketDetails?.route?.departure 
-              ? ((h, m) => `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`)
-                (...ticketDetails.route.departure.split(":").map(Number)) 
-              : "No time available"})
+            <p>
+              <strong>Seat Number:</strong>{" "}
+              {Array.isArray(ticketDetails?.seat)
+                ? ticketDetails.seat
+                    .map((seat) => `${seat.number}(${seat.type})`)
+                    .join(", ")
+                : Array.isArray(JSON.parse(ticketDetails?.seat))
+                ? JSON.parse(ticketDetails.seat)
+                    .map((seat) => `${seat.number}(${seat.type})`)
+                    .join(", ")
+                : "No data"}
             </p>
-            <p><strong>From:</strong> {ticketDetails.route?.starting_point2}</p>
-            <p><strong>To:</strong> {ticketDetails.route?.ending_point2}</p>
-            <p><strong>Status:</strong>
-                <span
-                  className={`
-                    px-2 py-1 rounded-md
-                    ${ticketDetails.status === "PENDING" ? "text-yellow-500 border-yellow-500" : ""}
-                    ${ticketDetails.status === "SUCCESS" ? "text-green-500 border-green-500" : ""}
-                    ${ticketDetails.status === "REJECT" ? "text-red-500 border-red-500" : ""}
+            <p>
+              <strong>Date:</strong>
+              {ticketDetails?.start_time
+                ? ticketDetails.start_time.split("T")[0]
+                : "No date available"}
+              (
+              {ticketDetails?.route?.departure
+                ? ((h, m) =>
+                    `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${
+                      h >= 12 ? "PM" : "AM"
+                    }`)(...ticketDetails.route.departure.split(":").map(Number))
+                : "No time available"}
+              )
+            </p>
+            <p>
+              <strong>From:</strong> {ticketDetails.route?.starting_point2}
+            </p>
+            <p>
+              <strong>To:</strong> {ticketDetails.route?.ending_point2}
+            </p>
+            <p className="mt-1.5">
+              <strong className="mr-2">Status:</strong>
+              <span
+                className={`
+                    px-[6px] py-[1px] rounded-md
+                    ${
+                      ticketDetails.status === "PENDING"
+                        ? "text-yellow-500 border-yellow-500"
+                        : ""
+                    }
+                    ${
+                      ticketDetails.status === "SUCCESS"
+                        ? "text-green-500 border-green-500"
+                        : ""
+                    }
+                    ${
+                      ticketDetails.status === "REJECT"
+                        ? "text-red-500 border-red-500"
+                        : ""
+                    }
                     border-2
                   `}
-                >
-                  {ticketDetails.status}
-                </span>
+              >
+                {ticketDetails.status}
+              </span>
             </p>
             <button
               onClick={handleCloseTicketDetails}

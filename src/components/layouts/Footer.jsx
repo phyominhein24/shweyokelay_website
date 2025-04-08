@@ -106,7 +106,7 @@ const Footer = () => {
       </div>
 
       <div className="py-3 border-t border-t-gray-400 text-stone-600 flex flex-col-reverse md:flex-row text-center md:text-start md:justify-between text-sm">
-        <p>&copy; Shwe Yoke Lay Express Company Limited.</p>
+        <p>&copy; Shwe Yote Lay Express Company Limited.</p>
         <p>Powered by Yolo Digital Myanmar.</p>
       </div>
     </div>

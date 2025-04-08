@@ -1,11 +1,11 @@
 import MMQ01 from "../assets/images/about/mmq_01.jpg";
-import MMQ02 from "../assets/images/about/mmq_02.jpg"; // Example for additional image
+// import MMQ02 from "../assets/images/about/mmq_02.jpg"; // Example for additional image
 import SYL01 from "../assets/images/about/syl_01.jpg";
-import SYL02 from "../assets/images/about/syl_02.jpg"; // Example for additional image
+// import SYL02 from "../assets/images/about/syl_02.jpg"; // Example for additional image
 
 const companies = [
   {
-    name: "Shwe Yoke Lay",
+    name: "Shwe Yote Lay",
     branches: [
       {
         address:
