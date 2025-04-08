@@ -1,14 +1,13 @@
 import { FaTimes } from "react-icons/fa";
 import Steering from "../../src/assets/images/icons/steering.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const VipSeatLayout = ({ value }) => {
+const VipSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
   const rows = 10;
   const seatsPerRow = 3;
   const totalSeats = rows * seatsPerRow;
 
   // Track selected seats and their types
-  const [selectedSeats, setSelectedSeats] = useState([]);
   const [modal, setModal] = useState({ visible: false, seatNumber: null });
 
   const toggleSeat = (seatNumber) => {
@@ -18,18 +17,19 @@ const VipSeatLayout = ({ value }) => {
         return prev.filter((seat) => seat.number !== seatNumber);
       } else {
         setModal({ visible: true, seatNumber });
-        return [...prev, { number: seatNumber, type: null }];
+        return prev;
       }
     });
   };
 
   // Handle seat type selection and color change
   const handleSeatTypeSelect = (type) => {
-    setSelectedSeats((prev) =>
-      prev.map((seat) =>
-        seat.number === modal.seatNumber ? { ...seat, type } : seat
-      )
-    );
+    // setSelectedSeats((prev) =>
+    //   prev.map((seat) =>
+    //     seat.number === modal.seatNumber ? { ...seat, type } : seat
+    //   )
+    // );
+    setSelectedSeats((prev) => { return [...prev, { number: modal.seatNumber, type: type }]})
     setModal({ visible: false, seatNumber: null });
   };
 
@@ -65,7 +65,7 @@ const VipSeatLayout = ({ value }) => {
         </div>
 
         {/* Passenger seats layout */}
-        {Array.from({ length: totalSeats }, (_, index) => {
+        {Array.from({ length: value?.vehicles_type?.total_seat }, (_, index) => {
           const seatNumber = index + 1;
           const seat = selectedSeats.find((seat) => seat.number === seatNumber);
           const backgroundColor = seat
@@ -76,31 +76,17 @@ const VipSeatLayout = ({ value }) => {
           const seatPosition = index % 3;
           const seatRow = Math.floor(index / 3);
           const gridColumn = [1, 2, 4, 1][seatPosition];
-
-          // let gridColumn;
-          // switch (seatPosition) {
-          //   case 0:
-          //     gridColumn = 1; // Column 1 for seat 1, 5, 9
-          //     break;
-          //   case 1:
-          //     gridColumn = 2; // Column 2 for seat 2, 6, 10
-          //     break;
-          //   case 2:
-          //     gridColumn = 4; // Column 4 for seat 3, 7, 11
-          //     break;
-          //   default:
-          //     gridColumn = 1;
-          // }
+          const isSold = seat ? seat.sold : false;
 
           return (
             <div
               key={seatNumber}
-              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor}`}
+              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               style={{
                 gridColumn,
                 gridRow: seatRow + 2, // Seats start below driver and door
               }}
-              onClick={() => toggleSeat(seatNumber)}
+              onClick={() => !isSold && toggleSeat(seatNumber)}
             >
               {seatNumber}
             </div>

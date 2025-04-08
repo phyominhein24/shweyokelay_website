@@ -4,24 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { endpoints } from "../constants/endpoints";
 import { getRequest } from "../helpers/api";
 
-const FilterForm = ({ onFilter, updatePayload }) => {
+const FilterForm = ({ onSearch, updatePayload }) => {
   const [loading, setLoading] = useState(false);
   const [selectedBusType, setSelectedBusType] = useState('All');
   const [BusType, setBusType] = useState([]);
-  const [selectedDeparture, setSelectedDeparture] = useState("morning");
-
-  const handleDeparture = (event) => {
-    setSelectedDeparture(event.target.value);
-  };
-
-  const filterSubmitted = (e) => {
-    e.preventDefault();
-    const filters = {
-      selectedBusType,
-      selectedDeparture,
-    };
-    onFilter(filters); // Send filter data to parent
-  };
+  const [selectedDeparture, setSelectedDeparture] = useState("any");
 
   const loadingData = useCallback(async () => {
     setLoading(true);
@@ -35,6 +22,11 @@ const FilterForm = ({ onFilter, updatePayload }) => {
   useEffect(() => {
     loadingData();
   }, [loadingData]);
+  
+  const filterClick = (event) =>{
+    event.preventDefault();
+    onSearch()
+  }
 
   return (
     <div className="md:mt-5 bg-stone-100 p-5 w-full rounded-xl shadow-lg">
@@ -45,16 +37,16 @@ const FilterForm = ({ onFilter, updatePayload }) => {
           type="button"
           onClick={() => {
             setSelectedBusType("All");
-            setSelectedDeparture("morning");
-            onFilter({ selectedBusType: "All", selectedDeparture: "morning" });
-            updatePayload("value", ""); // Reset the param value when resetting
+            setSelectedDeparture("any");
+            onFilter({ selectedBusType: "All", selectedDeparture: "any" });
+            updatePayload("value", "");
           }}
         >
           <RiResetLeftFill size={25} />
         </button>
       </div>
 
-      <form onSubmit={filterSubmitted} className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4">
         {/* Bus Type */}
         <div className="mt-3 border border-stone-400 rounded-xl">
           <p className="p-1 font-bold text-center text-lg">Bus Types</p>
@@ -97,13 +89,16 @@ const FilterForm = ({ onFilter, updatePayload }) => {
         <div className="mt-3 border border-stone-400 rounded-xl">
           <p className="p-1 font-bold text-center text-lg">Departure Times</p>
           <div className="p-2 flex flex-col gap-3">
-            {["any", "morning", "afternoon", "evening"].map((time) => (
+            {["any", "morning", "evening"].map((time) => (
               <label key={time} className="flex items-center">
                 <input
                   type="radio"
                   value={time}
                   checked={selectedDeparture === time}
-                  onChange={handleDeparture}
+                  onChange={() => {
+                    updatePayload("departure", event.target.value); // Set empty value for All
+                    setSelectedDeparture(event.target.value);
+                  }}
                   className="mr-2"
                 />
                 {time.charAt(0).toUpperCase() + time.slice(1)}
@@ -113,7 +108,7 @@ const FilterForm = ({ onFilter, updatePayload }) => {
         </div>
 
         <button
-          type="submit"
+          onClick={filterClick}
           className="p-2 bg-primary-0 hover:bg-secondary-0 text-white"
         >
           Apply Filters

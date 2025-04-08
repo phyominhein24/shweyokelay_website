@@ -8,6 +8,9 @@ import Flag from "react-world-flags";
 import { mobileMenuToggle } from "../../redux/shareSlice";
 import { removeNotification } from "../../redux/shareSlice";
 import { useTranslation } from "react-i18next";
+import { getData, removeData } from "../../helpers/localstorage";
+import { keys } from "../../constants/config";
+import { updateUserLogin } from "../../shares/shareSlice";
 
 const Header = () => {
   const { t, i18n } = useTranslation();
@@ -16,8 +19,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [userLogIn, setUserLogIn] = useState(false);
-  const { mobileMenu, notification } = useSelector((state) => state.share);
+  const { mobileMenu, notification, userLogIn } = useSelector((state) => state.share);
 
   const myPath = location.pathname;
 
@@ -29,6 +31,17 @@ const Header = () => {
     }
   }, [i18n, translation]);
 
+  const logIn = () => {
+    if(userLogIn){
+      dispatch(updateUserLogin(false));
+      removeData(keys.API_TOKEN);
+      removeData(keys.USER);
+      navigate("/");
+    }else{
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     const timers = notification.map((noti) =>
       setTimeout(() => {
@@ -39,10 +52,17 @@ const Header = () => {
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, [notification, dispatch]);
 
-  const logIn = () => {
-    setUserLogIn(!userLogIn);
-    navigate("/login");
-  };
+  useEffect(()=>{
+    const apiToken = getData(keys.API_TOKEN);
+    const user = getData(keys.USER);
+    if (apiToken && user) {
+      dispatch(updateUserLogin(true))
+    }
+  },[])
+
+  useEffect(()=>{
+    console.log(userLogIn)
+  },[userLogIn])
 
   return (
     <>
@@ -213,7 +233,7 @@ const Header = () => {
               <span>{userLogIn ? "Log Out" : "Log In/ Register"}</span>
             </button>
 
-            <button
+            {/* <button
               onClick={() => setTranslation(!translation)}
               className="text-md font-semibold transition-colors duration-400 hover:text-primary-0"
             >
@@ -246,7 +266,7 @@ const Header = () => {
                   <span>English</span>
                 </div>
               )}
-            </button>
+            </button> */}
           </div>
 
           {/* Hamburger */}

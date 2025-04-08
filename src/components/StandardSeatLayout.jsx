@@ -2,12 +2,11 @@ import { FaTimes } from "react-icons/fa";
 import Steering from "../../src/assets/images/icons/steering.png";
 import { useState } from "react";
 
-const StandardSeatLayout = ({value}) => {
+const StandardSeatLayout = ({ value, selectedSeats, setSelectedSeats, orders }) => {
   const rows = 11;
   const seatsPerRow = 4;
   const totalSeats = rows * seatsPerRow;
 
-  const [selectedSeats, setSelectedSeats] = useState([]);
   const [modal, setModal] = useState({ visible: false, seatNumber: null });
 
   const toggleSeat = (seatNumber) => {
@@ -17,17 +16,18 @@ const StandardSeatLayout = ({value}) => {
         return prev.filter((seat) => seat.number !== seatNumber);
       } else {
         setModal({ visible: true, seatNumber });
-        return [...prev, { number: seatNumber, type: null }];
+        return prev
       }
     });
   };
 
   const handleSeatTypeSelect = (type) => {
-    setSelectedSeats((prev) =>
-      prev.map((seat) =>
-        seat.number === modal.seatNumber ? { ...seat, type } : seat
-      )
-    );
+    // setSelectedSeats((prev) =>
+    //   prev.map((seat) =>
+    //     seat.number === modal.seatNumber ? { ...seat, type } : seat
+    //   )
+    // );
+    setSelectedSeats((prev) => { return [...prev, { number: modal.seatNumber, type: type }]})
     setModal({ visible: false, seatNumber: null });
   };
 
@@ -60,9 +60,10 @@ const StandardSeatLayout = ({value}) => {
         </div>
 
         {/* Passenger seats layout */}
-        {Array.from({ length: totalSeats }, (_, index) => {
+        {Array.from({ length: value?.vehicles_type?.total_seat }, (_, index) => {
           const seatNumber = index + 1;
-          const seat = selectedSeats.find((seat) => seat.number === seatNumber);
+          console.log(selectedSeats)
+          const seat = selectedSeats.find((seat) => seat?.number === seatNumber);
           const backgroundColor = seat
             ? seatTypeColors[seat.type] || "bg-green-400"
             : "bg-green-400";
@@ -71,13 +72,17 @@ const StandardSeatLayout = ({value}) => {
           const seatPosition = index % 4;
           const seatRow = Math.floor(index / 4);
           const gridColumn = [1, 2, 4, 5][seatPosition];
+          const isSold = seat ? seat.sold : false;
 
           return (
             <div
               key={seatNumber}
-              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor}`}
-              style={{ gridColumn, gridRow: seatRow + 2 }}
-              onClick={() => toggleSeat(seatNumber)}
+              className={`min-w-11 min-h-11 md:w-14 md:h-14 max-w-16 max-h-16 flex items-center justify-center rounded-lg cursor-pointer select-none ${backgroundColor} ${isSold ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              style={{
+                gridColumn,
+                gridRow: seatRow + 2, // Seats start below driver and door
+              }}
+              onClick={() => !isSold && toggleSeat(seatNumber)}
             >
               {seatNumber}
             </div>
@@ -85,7 +90,7 @@ const StandardSeatLayout = ({value}) => {
         })}
       </div>
 
-      <div className="w-full mt-5 red">
+      <div className="w-full mt-5">
         <h3 className="text-lg text-center font-semibold mb-2">
           Color definitions
         </h3>
