@@ -6,7 +6,6 @@ import BusToLeft from "../assets/images/home/busToLeft.png";
 import BusToRight from "../assets/images/home/busToRight.png";
 import FAQ from "../components/FAQ";
 import HeroPicture from "../assets/images/home/hero.jpg";
-import SearchForm from "../components/SearchForm";
 import StrenghtCards from "../components/StrenghtCards";
 import Ticket from "../components/Ticket";
 import Tips from "../components/Tips";
@@ -14,6 +13,7 @@ import { endpoints } from "../constants/endpoints";
 import { getRequest } from "../helpers/api";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import SearchForm2 from "../components/SearchForm2";
 
 const HomePage = () => {
   const [routes, setRoutes] = useState([]);
@@ -87,7 +87,7 @@ const HomePage = () => {
             <p className="text-2xl md:text-3xl leading-none font-bold">
               Travel with us now
             </p>
-            <SearchForm onSearch={handleSearch} />
+            <SearchForm2 onSearch={(e)=>handleSearch(e)} />
           </div>
         </div>
       </section>
@@ -95,7 +95,7 @@ const HomePage = () => {
       <StrenghtCards />
 
       {/* popular routes */}
-      <section>
+      {/* <section>
         <h1 className="text-2xl md:text-3xl md:text-[3rem] font-bold text-center pt-10 pb-5">
           Popular Routes
         </h1>
@@ -105,7 +105,7 @@ const HomePage = () => {
             return <Ticket key={index} value={value} />;
           })}
         </div>
-      </section>
+      </section> */}
 
       {/* Download our app */}
       <section className="flex flex-col gap-y-5 md:gap-0 md:flex-row justify-between items-center mt-5 bg-primary-0 bg-opacity-50 p-8 ">

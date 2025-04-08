@@ -1,10 +1,8 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { endpoints } from "../constants/endpoints";
 import { postRequest } from "../helpers/api";
-import { setData } from "../helpers/localstorage";
 import { updateNotification } from "../shares/shareSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,29 +15,31 @@ const RegisterPage = () => {
     email: "",
     password: "",
   });
-
+  const [errors, setErrors] = useState({}); // State to store validation errors
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const updatePayload = (key, value) => {
     setPayload((prev) => ({
       ...prev,
       [key]: value,
     }));
+    setErrors((prev) => ({
+      ...prev,
+      [key]: "",
+    }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setErrors({});
     const result = await postRequest(`${endpoints.register}`, payload);
+
     if (result.status === 200) {
       dispatch(
         updateNotification({
@@ -47,7 +47,15 @@ const RegisterPage = () => {
           message: "Register successful!",
         })
       );
-      navigate("/");
+      navigate("/login");
+    } else if (result.status === 422) {
+      setErrors(result.error || {});
+      dispatch(
+        updateNotification({
+          variant: "error",
+          message: "Validation Failed. Please check your inputs.",
+        })
+      );
     } else {
       dispatch(
         updateNotification({ variant: "error", message: result?.message })
@@ -74,10 +82,13 @@ const RegisterPage = () => {
               onChange={(e) => updatePayload("name", e.target.value)}
               className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label htmlFor="phone" className="block text-sm font-medium">
               Phone
             </label>
             <input
@@ -87,6 +98,9 @@ const RegisterPage = () => {
               onChange={(e) => updatePayload("phone", e.target.value)}
               className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+            )}
           </div>
 
           <div>
@@ -100,6 +114,9 @@ const RegisterPage = () => {
               onChange={(e) => updatePayload("email", e.target.value)}
               className="w-full mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary-0"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+            )}
           </div>
 
           <div>
@@ -121,13 +138,16 @@ const RegisterPage = () => {
                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </span>
             </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+            )}
           </div>
 
           <button
             type="submit"
             className="w-full bg-primary-0 text-white py-3 rounded-md text-base font-semibold hover:opacity-90"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
